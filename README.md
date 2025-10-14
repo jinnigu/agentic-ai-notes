@@ -95,3 +95,80 @@ Other examples of tools to help reflection
     Mentioning competitors | Our company's shoes are better than RivalCo | Pattern matching for competitor names
     Fact checking an essay | The Taj Mahal was built in 1648 | Web search results
     LLM won't follow output length guidelines | Essay is over word limit | Word count tool
+
+
+## Module 3: Tool use
+
+What are tools?
+Definition: Let LLMs call functions / request to call functions
+Tools are functions that we provide to the LLM that it can request to call.
+LLMs can choose tools when appropriate.
+Examples
+Prompt | Tool | Output
+Can you find some Italian restaurants near Mountain View, CA? | web_search (query="restaurants near Mountain View, CA") | Spaghetti City is an Italian restaurant in Mountain View
+Show me customers who bought white sunglasses | query_database (table="sales", product="sunglasses", color="white") | 28 customers bought white sunglasses. Here they are ...
+How much money will I have after 10 years if I deposit $500 at 5% interest | interest_calc(principal=500, interest_rate=5, years=10) OR eval("500 * (1 + 0.05) * 10") | $814.45
+Developer think through the things you want an application to do, then create the functions or the tools that are needed to make them available to the LLM to let it use the appropriate tools to complete the tasks.
+Depending on the application, need to implement and make different tools available to the LLM.
+
+Creating a tool
+Tools are just code that the LLM can request to be executed.
+Prompting an LLM to use tools.
+Example 1. System prompt: You have access to a tool called get_current_time. To use it, return the following exactly: Function: get_current_time()
+Example 2. System prompt: You have access to a tool called get_current_time for a specific timezone. To use it, return the following exactly: Function: get_current_time("timezone")
+Process: provide the tool to the LLM, implement the function, tell the LLM that it is available. When LLM decides to call a tool, it generates a specific output, you need to call the function for the LLM. You call the function, get its output, take the output of the the function you called, give it back to the LLM. LLM use it to do next step.
+Before LLM was trained natively.
+
+Tool syntax
+Defining tools syntax (model, messages, tools, max_turns)
+Behind the scenes: AISuite creates Json schema (name, description, parameters)
+
+Code execution
+Example. a simple calculator, create multiple tools
+Alternative approach: writing code
+exec(output)
+Reflection with external feedback (if any syntaxError)
+Secure code execution: running outside of a sandbox can be risky. sandboxes can help protect against catastrophic errors. (E2B, docker)
+
+MCP (Model xontext Protocol)
+Give LLM more context and tools.
+Painpoint: Apps (app1 / app2 / ...) -> tools (Slack / GDrive / Github / PostgreSQL)
+From each app creates their own tools (m * n), to each app uses shared MCP server (m + n)
+Using pre-built clients and servers.
+Many serves available, some developed by the service providers.
+Example. claude UI, what are the latest pull requests?
+
+
+## Module 4: zpractival Tips for Building Agentic AI
+
+Evaluations (evals)
+Example. invoice processing workflow, mixed up dates
+Create an eval to measure data extraction
+1. manually extract due dates from 10 - 20 invoices
+2. specify output format of data in prompt
+3. extract date from the LLM response using code
+4. compare LLM result to ground truth
+Driving your development process with evals
+    Build a system and look at outputs to discover where it is behaving in an unsatisfactory way.
+    Drive improvement by putting in place a small eval with ~20 examples to help you track progress.
+    Monitor as you make changes to workflow (e.g. new prompts, new algorithms) and see if the metric improves.
+Example. marketing copy assistant, length guidelines: Instagram captions : 10 works max
+Creaet an eval to measure text length
+1. create a set of 10-20 test tasks
+2. add code to measyre work count of the output (word_count = len(text.split()))
+3. compare length of generated text to limit (if (word_count <= 10>): num_correct += 1)
+Example. research agent
+Prompt | Issues
+Recent clack hole science | Missed high-profile result that had lots of new coverage
+Renting vs buying a home in Seattle | Seems to do a good job
+Robotics for harvesting fruit | Didn't mention leading quipment company
+Create an eval to measure performance
+1. choose 3-5 gold standard discussion points for each topic
+2. use LLM-as-a-judge to count how many topics were mentioned
+3. 
+
+
+Error Analysis and prioritizing next steps
+
+
+## Module 5: Patterns for HIghly Autonomous Agents
