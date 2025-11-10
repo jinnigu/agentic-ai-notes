@@ -432,5 +432,7 @@ System prompt: "You are marketing manager and have the following team of agents 
 **Most common 2 communication patterns:**
 - **Linear**
 - **Hierarchy**
-  - Deeper hierarchy: agents → subagents → sub-subagents
+
+**Other 2 communication patterns:**
+- **Deeper hierarchy:** agents → subagents → sub-subagents
 - **All-to-all:** agents can call each other until everyone decides the task is done
